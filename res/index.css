@@ -8,6 +8,7 @@ html
     margin: 0 auto;
     display: block;
     border: 5px solid #4b4b4b;
+    /* border: 5px solid #000;  */
     /* border-bottom: 5px solid green; */
     background: #262621;
 }
