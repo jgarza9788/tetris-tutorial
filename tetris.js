@@ -1,6 +1,7 @@
 var canvas = document.getElementById('board');
 var ctx = canvas.getContext("2d");
 var linecount = document.getElementById('lines');
+var nextPiece = document.getElementById('next');
 var clear = window.getComputedStyle(canvas).getPropertyValue('background-color');
 var width = 10;
 var height = 20;
@@ -16,10 +17,46 @@ for (var r = 0; r < height; r++) {
 	}
 }
 
-function newPiece() {
-	var p = pieces[parseInt(Math.random() * pieces.length, 10)];
+
+var pieceCnt = 0;
+var nP;
+
+function newPiece() 
+{
+	console.log("generate new piece");
+
+	var p;
+
+	if (pieceCnt == 0)
+	{
+		p = pieces[parseInt(Math.random() * pieces.length, 10)];
+	}
+	else
+	{
+		p = nP;
+	}
+	
+	pieceCnt +=1;
+	nP = pieces[parseInt(Math.random() * pieces.length, 10)];
+	showNextPiece();
+	console.log(p[2]);
 	return new Piece(p[0], p[1]);
 }
+
+function showNextPiece()
+{
+	// console.log("show next piece");
+	// console.log(nP);
+	// console.log(nP[2]);
+
+	// -webkit-mask-box-image: url("I.png");
+	// nextPiece.src="res/" + nP[2] + ".png";
+
+	// nextPiece.style.mask = "res/" + nP[2] + ".png";
+	nextPiece.style = "-webkit-mask-box-image: url(\"res/"+ nP[2] +".png\");";
+	nextPiece.style.backgroundColor = nP[1];
+}
+
 
 function drawSquare(x, y) 
 {
@@ -39,6 +76,8 @@ function Piece(patterns, color) {
 
 	this.color = color;
 
+	// console.log("width: " + width);
+	// console.log("this.pattern.length: " + this.pattern.length);
 	this.x = width/2-parseInt(Math.ceil(this.pattern.length/2), 10);
 	this.y = -2;
 }
@@ -68,7 +107,7 @@ Piece.prototype.rotate = function()
 Piece.prototype.rotateleft = function() 
 {
 	var nudge = 0;
-	var nextpat = this.patterns[(this.patterni + 1) % this.patterns.length];
+	var nextpat = this.patterns[(this.patterni + 3) % this.patterns.length];
 
 	if (this._collides(0, 0, nextpat)) {
 		// Check kickback
@@ -86,7 +125,8 @@ Piece.prototype.rotateleft = function()
 
 var WALL = 1;
 var BLOCK = 2;
-Piece.prototype._collides = function(dx, dy, pat) {
+Piece.prototype._collides = function(dx, dy, pat) 
+{
 	for (var ix = 0; ix < pat.length; ix++) {
 		for (var iy = 0; iy < pat.length; iy++) {
 			if (!pat[ix][iy]) {
@@ -113,27 +153,6 @@ Piece.prototype._collides = function(dx, dy, pat) {
 
 Piece.prototype.down = function() 
 {
-	// var y = 1;
-	// while(!this._collides(0,y,this.pattern))
-	// {
-	// 	y +=1;
-	// }
-
-	// var y = 1;
-
-	// while(!this._collides(0, 1, this.pattern))
-	// {
-	// 	this.undraw();
-	// 	this.y++;
-	// 	this.draw();
-	// }
-
-	// this.lock();
-	// piece = newPiece();
-
-	// for (i = 0;)
-
-
 	if (this._collides(0, 1, this.pattern)) 
 	{
 		this.lock();
@@ -223,9 +242,14 @@ Piece.prototype._fill = function(color) {
 	ctx.fillStyle = color;
 	var x = this.x;
 	var y = this.y;
-	for (var ix = 0; ix < this.pattern.length; ix++) {
-		for (var iy = 0; iy < this.pattern.length; iy++) {
-			if (this.pattern[ix][iy]) {
+
+
+	for (var ix = 0; ix < this.pattern.length; ix++) 
+	{
+		for (var iy = 0; iy < this.pattern.length; iy++) 
+		{
+			if (this.pattern[ix][iy]) 
+			{
 				drawSquare(x + ix, y + iy);
 			}
 		}
@@ -242,13 +266,13 @@ Piece.prototype.draw = function(ctx) {
 };
 
 var pieces = [
-	[I, "#6be5f2"], //Cyan
-	[J, "#0054ff"], //Blue
-	[L, "#f27529"], //Orange
-	[O, "#d9c72b"], //Yellow
-	[S, "#a2d92b"], //green
-	[T, "#a37ef2"], //Purple
-	[Z, "#f22987"] 	//Red
+	[I, "#6be5f2","I"], //Cyan
+	[J, "#0054ff","J"], //Blue
+	[L, "#f27529","L"], //Orange
+	[O, "#d9c72b","O"], //Yellow
+	[S, "#a2d92b","S"], //green
+	[T, "#a37ef2","T"], //Purple
+	[Z, "#f22987","Z"] 	//Red
 ];
 var piece = null;
 

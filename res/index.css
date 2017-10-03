@@ -12,7 +12,41 @@ html
     background: #262621;
 }
 
-#lines 
+#info
+{
+    /* border: 5px solid #4b4b4b; */
+    /* display: block;*/
+    width: 250px;
+    /* height: 240; */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 75px auto;
+    column-width: 120px;
+
+    /* background: grey; */
+    background: #262621;
+    color: #4b4b4c;
+    margin: 0 auto;
+    margin-top: 2em;
+    font-size: 1.5em;
+}
+
+#lines
+{
+    grid-column-start: 1;
+    grid-column-end: span 2;
+    grid-row-start: 2;
+    grid-row-end: span 2;
+}
+
+#next
+{
+    width: 75px;
+    height: 75px;
+}
+
+
+#lines_old
 {
     display: block;
     width: 240px;
