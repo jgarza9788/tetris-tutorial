@@ -21,13 +21,14 @@ function newPiece() {
 	return new Piece(p[0], p[1]);
 }
 
-function drawSquare(x, y) {
+function drawSquare(x, y) 
+{
 	ctx.fillRect(x * tilesz, y * tilesz, tilesz, tilesz);
 	var ss = ctx.strokeStyle;
-	ctx.strokeStyle = "#555";
+	ctx.strokeStyle = "#4b4b4b";//"#78909c";
 	ctx.strokeRect(x * tilesz, y * tilesz, tilesz, tilesz);
-	ctx.strokeStyle = "#888";
-	ctx.strokeRect(x * tilesz + 3*tilesz/8, y * tilesz + 3*tilesz/8, tilesz/4, tilesz/4);
+	// ctx.strokeStyle = "#000";
+	// ctx.strokeRect(x * tilesz + 3*tilesz/8, y * tilesz + 3*tilesz/8, tilesz/4, tilesz/4);
 	ctx.strokeStyle = ss;
 }
 
@@ -42,7 +43,10 @@ function Piece(patterns, color) {
 	this.y = -2;
 }
 
-Piece.prototype.rotate = function() {
+
+//rotate right
+Piece.prototype.rotate = function() 
+{
 	var nudge = 0;
 	var nextpat = this.patterns[(this.patterni + 1) % this.patterns.length];
 
@@ -55,6 +59,26 @@ Piece.prototype.rotate = function() {
 		this.undraw();
 		this.x += nudge;
 		this.patterni = (this.patterni + 1) % this.patterns.length;
+		this.pattern = this.patterns[this.patterni];
+		this.draw();
+	}
+};
+
+//rotateleft
+Piece.prototype.rotateleft = function() 
+{
+	var nudge = 0;
+	var nextpat = this.patterns[(this.patterni + 1) % this.patterns.length];
+
+	if (this._collides(0, 0, nextpat)) {
+		// Check kickback
+		nudge = this.x > width / 2 ? -1 : 1;
+	}
+
+	if (!this._collides(nudge, 0, nextpat)) {
+		this.undraw();
+		this.x += nudge;
+		this.patterni = (this.patterni + 3) % this.patterns.length;
 		this.pattern = this.patterns[this.patterni];
 		this.draw();
 	}
@@ -87,16 +111,51 @@ Piece.prototype._collides = function(dx, dy, pat) {
 	return 0;
 };
 
-Piece.prototype.down = function() {
-	if (this._collides(0, 1, this.pattern)) {
+Piece.prototype.down = function() 
+{
+	// var y = 1;
+	// while(!this._collides(0,y,this.pattern))
+	// {
+	// 	y +=1;
+	// }
+
+	// var y = 1;
+
+	// while(!this._collides(0, 1, this.pattern))
+	// {
+	// 	this.undraw();
+	// 	this.y++;
+	// 	this.draw();
+	// }
+
+	// this.lock();
+	// piece = newPiece();
+
+	// for (i = 0;)
+
+
+	if (this._collides(0, 1, this.pattern)) 
+	{
 		this.lock();
 		piece = newPiece();
-	} else {
+	} 
+	else 
+	{
 		this.undraw();
 		this.y++;
 		this.draw();
 	}
 };
+
+Piece.prototype.putdown = function()
+{
+	while(!this._collides(0, 1, this.pattern))
+	{
+		this.undraw();
+		this.y++;
+		this.draw();
+	}
+}
 
 Piece.prototype.moveRight = function() {
 	if (!this._collides(1, 0, this.pattern)) {
@@ -183,13 +242,13 @@ Piece.prototype.draw = function(ctx) {
 };
 
 var pieces = [
-	[I, "cyan"],
-	[J, "blue"],
-	[L, "orange"],
-	[O, "yellow"],
-	[S, "green"],
-	[T, "purple"],
-	[Z, "red"]
+	[I, "#6be5f2"], //Cyan
+	[J, "#0054ff"], //Blue
+	[L, "#f27529"], //Orange
+	[O, "#d9c72b"], //Yellow
+	[S, "#a2d92b"], //green
+	[T, "#a37ef2"], //Purple
+	[Z, "#f22987"] 	//Red
 ];
 var piece = null;
 
@@ -209,23 +268,32 @@ document.body.addEventListener("keyup", function (e) {
 	downI[e.keyCode] = null;
 }, false);
 
+//http://keycode.info/
 function key(k) {
-	if (done) {
+	if (done) 
+	{
 		return;
 	}
 	if (k == 38) { // Player pressed up
 		piece.rotate();
-		dropStart = Date.now();
+		// dropStart = Date.now();
 	}
-	if (k == 40) { // Player holding down
-		piece.down();
+	if (k == 40) { // Player pressed down
+		// piece.down();
+		piece.rotateleft();
+		// dropStart = Date.now();
 	}
 	if (k == 37) { // Player holding left
 		piece.moveLeft();
-		dropStart = Date.now();
+		// dropStart = Date.now();
 	}
 	if (k == 39) { // Player holding right
 		piece.moveRight();
+		// dropStart = Date.now();
+	}
+	if (k == 17) //Ctrl
+	{
+		piece.putdown();
 		dropStart = Date.now();
 	}
 }
@@ -245,7 +313,8 @@ function main() {
 	var now = Date.now();
 	var delta = now - dropStart;
 
-	if (delta > 1000) {
+	if (delta > (1000 - (lines * 10)))
+	{
 		piece.down();
 		dropStart = now;
 	}
