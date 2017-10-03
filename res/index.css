@@ -17,18 +17,18 @@ html
     /* border: 5px solid #4b4b4b; */
     /* display: block;*/
     width: 250px;
-    /* height: 240; */
+    /* height: 100px; */
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 75px auto;
+    grid-template-rows: 100px 25px;
     column-width: 120px;
 
     /* background: grey; */
     background: #262621;
     color: #4b4b4c;
     margin: 0 auto;
-    margin-top: 2em;
-    font-size: 1.5em;
+    /* margin-top: 2em; */
+    font-size: 1.75em;
 }
 
 #lines
@@ -36,13 +36,18 @@ html
     grid-column-start: 1;
     grid-column-end: span 2;
     grid-row-start: 2;
-    grid-row-end: span 2;
+    grid-row-end: span 2; 
 }
 
 #next
 {
-    width: 75px;
-    height: 75px;
+    width: 100px;
+    height: 100px;
+}
+
+#nlabel
+{
+    line-height: 50px;
 }
 
 
